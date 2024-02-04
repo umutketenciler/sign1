@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signline Fason Fiyat Hesaplama</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 50px;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      display: inline-block;
+      text-align: left;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    #result div {
+      margin-top: 10px;
+    }
+
+    #result span {
+      font-weight: bold;
+      color: #4CAF50;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Signline Fason <br> Fiyat Hesaplama</h1>
+
+  <form id="areaForm">
+    <label for="customerType">Müşteri Tipi:</label>
+    <select id="customerType" onchange="toggleCustomType()">
+      <option value="option1">FASON MÜŞTERİ</option>
+      <option value="option2">DİĞER MÜŞTERİ</option>
+    </select>
+
+    <div id="customTypeSection" style="display: none;">
+      <label for="customType">Custom Tipi:</label>
+      <select id="customType">
+        <option value="custom1">Custom 1</option>
+        <option value="custom2">Custom 2</option>
+      </select>
+    </div>
+
+    <label for="machineType">Makine Tipi:</label>
+    <select id="machineType" onchange="populateMaterialOptions()">
+      <option value="machine1">UV BASKI</option>
+      <option value="machine2">SOLVENT BASKI</option>
+      <option value="machine3">LATEX BASKI</option>
+      <option value="machine4">ECOSOLVENT BASKI</option>
+      <option value="machine5">TEKSTİL BASKI</option>
+      <option value="machine6">YAN BANT</option>
+    </select>
+
+    <label for="materialType">Malzeme Tipi:</label>
+    <select id="materialType"></select>
+
+    <label for="length">Uzunluk (cm):</label>
+    <input type="number" id="length" step="any" required>
+
+    <label for="width">Genişlik (cm):</label>
+    <input type="number" id="width" step="any" required>
+
+    <button type="button" onclick="calculateTotal()">Hesapla</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    function toggleCustomType() {
+      var customTypeSection = document.getElementById("customTypeSection");
+      var customerType = document.getElementById("customerType").value;
+
+      if (customerType === "option1") {
+        customTypeSection.style.display = "block";
+      } else {
+        customTypeSection.style.display = "none";
+      }
+    }
+
+    function populateMaterialOptions() {
+      var customerType = document.getElementById("customerType").value;
+      var machineType = document.getElementById("machineType").value;
+      var customType = document.getElementById("customType").value;
+
+      var materialOptions = document.getElementById("materialType");
+
+      materialOptions.innerHTML = "";
+
+      if (customerType === "option1") { // Fason müşteri
+        if (machineType === "machine1") {
+          addMaterialOption("FOLYO MAT", 6);
+          addMaterialOption("FOLYO PARLAK", 6);
+          addMaterialOption("FOLYO ARKASI GRİ", 6);
+          addMaterialOption("BRANDA", 5.5);
+          addMaterialOption("BRANDA ARKASI SİYAH", 5.7);
+          addMaterialOption("LIGHTBOX (Dikişli)", 19);
+          addMaterialOption("DURATRANS", 9);
+        } else if (machineType === "machine2") {
+          addMaterialOption("BRANDA", 3.6);
+          addMaterialOption("BRANDA ARKASI SİYAH", 3.8);
+          addMaterialOption("MESH VİNİL", 4);
+          addMaterialOption("CITYLIGHT RAKET", 2.1);
+          addMaterialOption("BLUEBACK", 2);
+        } else if (machineType === "machine3") {
+          addMaterialOption("FOLYO PARLAK", 8);
+          addMaterialOption("FOLYO MAT", 8);
+          addMaterialOption("FOLYO ARKASI GRİ", 8);
+          addMaterialOption("ŞEFFAF FOLYO", 8);
+          addMaterialOption("ONE VISION", 9.5);
+          addMaterialOption("CAST FOLYO", 21);
+          addMaterialOption("KANVAS KUMAŞ", 12);
+        } else if (machineType === "machine4") {
+          addMaterialOption("FOLYO PARLAK", 4.3);
+          addMaterialOption("FOLYO MAT", 4.3);
+          addMaterialOption("FOLYO ARKASI GRİ", 4.3);
+          addMaterialOption("ŞEFFAF FOLYO", 4.3);
+          addMaterialOption("ONE VISION", 5.5);
+          addMaterialOption("FOLYO BASKES", 10);
+          addMaterialOption("KANVAS KUMAŞ", 12);
+        } else if (machineType === "machine5") {
+          addMaterialOption("RAŞEL BASKI", 3.5);
+        } else if (machineType === "machine6") {
+          addMaterialOption("4 CM ALM YAN BANT (SİYAH/BEYAZ) metre", 2.3);
+          addMaterialOption("6 CM ALM YAN BANT (SİYAH/BEYAZ) metre", 2.8);
+          addMaterialOption("8 CM ALM YAN BANT (SİYAH/BEYAZ) metre", 3.4);
+          addMaterialOption("6 CM ALM YAN BANT (KROM) metre", 5.7);
+          addMaterialOption("6 CM ALM YAN BANT (GOLD) metre", 6);
+        }
+      } else { // Diğer müşteri
+        // Buraya diğer müşteri tipine özel malzeme seçeneklerini ekleyebilirsiniz.
+        // Örnek:
+        // if (machineType === "machineX") {
+        //   addMaterialOption("MALZEME 1", 10);
+        //   addMaterialOption("MALZEME 2", 15);
+        // }
+      }
+    }
+
+    function addMaterialOption(text, price) {
+      var materialOptions = document.getElementById("materialType");
+      var option = document.createElement("option");
+      option.value = price;
+      option.text = text + " - $" + price.toFixed(2);
+      materialOptions.add(option);
+    }
+
+    function calculateTotal() {
+      var length = parseFloat(document.getElementById("length").value) / 100; // cm'yi m'ye çevir
+      var width = parseFloat(document.getElementById("width").value) / 100; // cm'yi m'ye çevir
+      var materialPrice = parseFloat(document.getElementById("materialType").value);
+
+      if (isNaN(length) || isNaN(width) || isNaN(materialPrice)) {
+        alert("Lütfen geçerli sayısal değerler girin.");
+        return;
+      }
+
+      var area = length * width;
+      var totalPrice = area * materialPrice;
+      var kdv = totalPrice * 0.10; // KDV oranı: %10
+      var totalPriceWithKDV = totalPrice + kdv;
+
+      var resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "<div id='totalArea'>Toplam Alan: <span>" + area.toFixed(2) + " metrekare</span></div><div id='totalPrice'>Toplam Fiyat: <span>$" + totalPrice.toFixed(2) + " + KDV (%10)</span></div><div id='totalPriceWithKDV'>KDV Dahil Fiyat: <span>$" + totalPriceWithKDV.toFixed(2) + "</span></div>";
+    }
+  </script>
+
+</body>
+
+</html>
